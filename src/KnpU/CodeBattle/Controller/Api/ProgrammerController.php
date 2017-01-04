@@ -28,6 +28,11 @@ $controllers->get('/api/programmers/{nickname}', array($this, 'showAction'))->bi
     {
         $programmer = new Programmer();
         $this->handleRequest($request, $programmer);
+
+        if ($errors = $this->validate($programmer)) {
+            return $this->handleValidationResponse($errors);
+        }
+
         $this->save($programmer);
 
         $data = $this->serializeProgrammer($programmer);
@@ -88,6 +93,11 @@ $controllers->get('/api/programmers/{nickname}', array($this, 'showAction'))->bi
         }
 
         $this->handleRequest($request, $programmer);
+
+        if ($errors = $this->validate($programmer)) {
+            return $this->handleValidationResponse($errors);
+        }
+
         $this->save($programmer);
 
         $data = $this->serializeProgrammer($programmer);
@@ -135,4 +145,16 @@ $controllers->get('/api/programmers/{nickname}', array($this, 'showAction'))->bi
 
         return new Response(null, 204);
     }
+
+    private function handleValidationResponse(array $errors)
+    {
+        $data = array(
+            'type' => 'validation_error',
+            'title' => 'There was a validation error',
+            'errors' => $errors
+        );
+
+        return new JsonResponse($data, 400);
+    }
+
 }
