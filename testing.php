@@ -18,10 +18,10 @@ $data = array(
     'tagLine' => 'a test dev!'
 );
 
-//$request = $client->post('/api/programmers', null, json_encode($data));
-//$response = $request->send();
-//echo $response;
-//echo "\n\n";
+$request = $client->post('/api/programmers', null, json_encode($data));
+$response = $request->send();
+echo $response;
+echo "\n\n";
 
 //$request = $client->get('/api/programmers/'.$nickname);
 //$request = $client->get('/api/programmers/ObjectOrienter486');
@@ -30,7 +30,7 @@ $data = array(
 //echo $response;
 //echo "\n\n";
 
-$request = $client->get('/api/programmers');
-$response = $request->send();
-echo $response;
-echo "\n\n";
+//$request = $client->get('/api/programmers');
+//$response = $request->send();
+//echo $response;
+//echo "\n\n";
