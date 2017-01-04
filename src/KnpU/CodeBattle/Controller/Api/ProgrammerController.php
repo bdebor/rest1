@@ -22,12 +22,8 @@ $controllers->get('/api/programmers/{nickname}', array($this, 'showAction'))->bi
 
     public function newAction(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
-
-        $programmer = new Programmer($data['nickname'], $data['avatarNumber']);
-        $programmer->tagLine = $data['tagLine'];
-        $programmer->userId = $this->findUserByUsername('weaverryan')->id;
-
+        $programmer = new Programmer();
+        $this->handleRequest($request, $programmer);
         $this->save($programmer);
 
         $data = $this->serializeProgrammer($programmer);
@@ -87,13 +83,7 @@ $controllers->get('/api/programmers/{nickname}', array($this, 'showAction'))->bi
             $this->throw404('Crap! This programmer has deserted! We\'ll send a search party');
         }
 
-        $data = json_decode($request->getContent(), true);
-
-        $programmer->nickname = $data['nickname'];
-        $programmer->avatarNumber = $data['avatarNumber'];
-        $programmer->tagLine = $data['tagLine'];
-        $programmer->userId = $this->findUserByUsername('weaverryan')->id;
-
+        $this->handleRequest($request, $programmer);
         $this->save($programmer);
 
         $data = $this->serializeProgrammer($programmer);
@@ -101,4 +91,15 @@ $controllers->get('/api/programmers/{nickname}', array($this, 'showAction'))->bi
 
         return $response;
     }
+
+    private function handleRequest(Request $request, Programmer $programmer)
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $programmer->nickname = $data['nickname'];
+        $programmer->avatarNumber = $data['avatarNumber'];
+        $programmer->tagLine = $data['tagLine'];
+        $programmer->userId = $this->findUserByUsername('weaverryan')->id;
+    }
+
 }
