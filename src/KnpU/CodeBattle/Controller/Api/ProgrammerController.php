@@ -30,16 +30,12 @@ $controllers->get('/api/programmers/{nickname}', array($this, 'showAction'))->bi
         $this->save($programmer);
 
         $data = $this->serializeProgrammer($programmer);
-        $response = new Response(
-            json_encode($data)
-            , 201
-        );
+        $response = new JsonResponse($data, 201);
         $programmerUrl = $this->generateUrl(
             'api_programmers_show',
             ['nickname' => $programmer->nickname]
         );
         $response->headers->set('Location', $programmerUrl);
-        $response->headers->set('Content-Type', 'application/json');
 
         return $response;
     }
@@ -54,8 +50,7 @@ $controllers->get('/api/programmers/{nickname}', array($this, 'showAction'))->bi
 
         $data = $this->serializeProgrammer($programmer);
 
-        $response = new Response(json_encode($data), 200);
-        $response->headers->set('Content-Type', 'application/json');
+        $response = new JsonResponse($data, 200);
 
         return $response;
     }
@@ -68,8 +63,7 @@ $controllers->get('/api/programmers/{nickname}', array($this, 'showAction'))->bi
             $data['programmers'][] = $this->serializeProgrammer($programmer);
         }
 
-        $response = new Response(json_encode($data), 200);
-        $response->headers->set('Content-Type', 'application/json');
+        $response = new JsonResponse($data, 200);
 
         return $response;
     }
