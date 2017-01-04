@@ -15,16 +15,11 @@ class ProgrammerController extends BaseController
     protected function addRoutes(ControllerCollection $controllers)
     {
         $controllers->post('/api/programmers', array($this, 'newAction'));
-        $controllers->get('/api/programmers/{nickname}', array($this, 'showAction'));
+        $controllers->get('/api/programmers/{nickname}', array($this, 'showAction'))->bind('api_programmers_show');
     }
 
     public function newAction(Request $request)
     {
-        // return 'let\'s battle!'; // 5
-        /**/ // 6
-//        $data = $request->getContent();
-//        return $data;
-
         $data = json_decode($request->getContent(), true);
 
         $programmer = new Programmer($data['nickname'], $data['avatarNumber']);
@@ -33,21 +28,18 @@ class ProgrammerController extends BaseController
 
         $this->save($programmer);
 
-//        return 'It worked. Believe me - I\'m an API';
-
-//        return new Response('It worked. Believe me - I\'m an API', 201);
-
         $response = new Response('It worked. Believe me - I\'m an API', 201);
-        $response->headers->set('Location', '/some/programmer/url');
+        $programmerUrl = $this->generateUrl(
+            'api_programmers_show',
+            ['nickname' => $programmer->nickname]
+        );
+        $response->headers->set('Location', $programmerUrl);
 
         return $response;
-
-        /*/*/
     }
 
     public function showAction($nickname)
     {
-//        return 'Hello '.$nickname;
         $programmer = $this->getProgrammerRepository()->findOneByNickname($nickname);
 
         if (!$programmer) {
@@ -61,7 +53,6 @@ class ProgrammerController extends BaseController
             'tagLine' => $programmer->tagLine,
         );
 
-//        return new Response(json_encode($data), 200);
         $response = new Response(json_encode($data), 200);
         $response->headers->set('Content-Type', 'application/json');
         return $response;
