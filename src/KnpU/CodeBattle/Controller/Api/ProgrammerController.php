@@ -19,6 +19,9 @@ $controllers->get('/api/programmers/{nickname}', array($this, 'showAction'))->bi
         $controllers->get('/api/programmers', array($this, 'listAction'));
         $controllers->put('/api/programmers/{nickname}', array($this, 'updateAction'));
         $controllers->delete('/api/programmers/{nickname}', array($this, 'deleteAction'));
+        $controllers->match('/api/programmers/{nickname}', array($this, 'updateAction'))
+            ->method('PATCH');
+
     }
 
     public function newAction(Request $request)
@@ -110,6 +113,11 @@ $controllers->get('/api/programmers/{nickname}', array($this, 'showAction'))->bi
 
         // update the properties
         foreach ($apiProperties as $property) {
+            // if a property is missing on PATCH, that's ok - just skip it
+            if (!isset($data[$property]) && $request->isMethod('PATCH')) {
+                continue;
+            }
+
             $val = isset($data[$property]) ? $data[$property] : null;
             $programmer->$property = $val;
         }
