@@ -81,8 +81,6 @@ $controllers->get('/api/programmers/{nickname}', array($this, 'showAction'))->bi
 
     public function updateAction($nickname, Request $request)
     {
-        throw new \Exception('This is scary!');
-
         $programmer = $this->getProgrammerRepository()->findOneByNickname($nickname);
 
         if (!$programmer) {
