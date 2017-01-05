@@ -23,6 +23,7 @@ use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\TranslationServiceProvider;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Finder\Finder;
 use KnpU\CodeBattle\DataFixtures\FixturesManager;
@@ -301,6 +302,10 @@ class Application extends SilexApplication
                 $apiProblem = $e->getApiProblem();
             } else {
                 $apiProblem = new ApiProblem($statusCode);
+            }
+
+            if ($e instanceof HttpException) {
+                $apiProblem->set('detail', $e->getMessage());
             }
 
             $data = $apiProblem->toArray();
