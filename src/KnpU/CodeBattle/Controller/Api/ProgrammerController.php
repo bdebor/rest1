@@ -51,8 +51,6 @@ class ProgrammerController extends BaseController
 
     public function showAction($nickname)
     {
-        throw new \Exception('I made a mistake!');
-
         $programmer = $this->getProgrammerRepository()->findOneByNickname($nickname);
 
         if (!$programmer) {
