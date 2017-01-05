@@ -32,9 +32,9 @@ class ProgrammerController extends BaseController
         $programmer = new Programmer();
         $this->handleRequest($request, $programmer);
 
-        if ($errors = $this->validate($programmer)) {
-            return $this->handleValidationResponse($errors);
-        }
+		if ($errors = $this->validate($programmer)) {
+			$this->throwApiProblemValidationException($errors);
+		}
 
         $this->save($programmer);
 
@@ -97,11 +97,11 @@ class ProgrammerController extends BaseController
 
         $this->handleRequest($request, $programmer);
 
-        if ($errors = $this->validate($programmer)) {
-            return $this->handleValidationResponse($errors);
-        }
+		if ($errors = $this->validate($programmer)) {
+			$this->throwApiProblemValidationException($errors);
+		}
 
-        $this->save($programmer);
+		$this->save($programmer);
 
         $data = $this->serializeProgrammer($programmer);
         $response = new JsonResponse($data, 200);
@@ -115,12 +115,12 @@ class ProgrammerController extends BaseController
         $isNew = !$programmer->id;
 
         if ($data === null) {
-			$problem = new ApiProblem(
+			$ApiProblem = new ApiProblem(
 				400,
 				ApiProblem::TYPE_INVALID_REQUEST_BODY_FORMAT
 			);
 
-			throw new ApiProblemException($problem);
+			throw new ApiProblemException($ApiProblem);
 		}
 
         // determine which properties should be changeable on this request
@@ -154,20 +154,14 @@ class ProgrammerController extends BaseController
         return new Response(null, 204);
     }
 
-    private function handleValidationResponse(array $errors)
-    {
-        $apiProblem = new ApiProblem(
-            400,
-            ApiProblem::TYPE_VALIDATION_ERROR
-        );
-        $apiProblem->set('errors', $errors);
+	private function throwApiProblemValidationException(array $errors)
+	{
+		$apiProblem = new ApiProblem(
+			400,
+			ApiProblem::TYPE_VALIDATION_ERROR
+		);
+		$apiProblem->set('errors', $errors);
 
-        $response = new JsonResponse(
-            $apiProblem->toArray(),
-            $apiProblem->getStatusCode()
-        );
-        $response->headers->set('Content-Type', 'application/problem+json');
-
-        return $response;
-    }
+		throw new ApiProblemException($apiProblem);
+	}
 }
