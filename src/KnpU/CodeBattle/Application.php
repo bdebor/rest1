@@ -303,8 +303,12 @@ class Application extends SilexApplication
                 $apiProblem = new ApiProblem($statusCode);
             }
 
+            $data = $apiProblem->toArray();
+            if ($data['type'] != 'about:blank') {
+                $data['type'] = 'http://localhost:8000/api/docs/errors#'.$data['type'];
+            }
             $response = new JsonResponse(
-                $apiProblem->toArray(),
+                $data,
                 $apiProblem->getStatusCode()
             );
             $response->headers->set('Content-Type', 'application/problem+json');
