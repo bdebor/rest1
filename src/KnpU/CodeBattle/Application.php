@@ -286,6 +286,8 @@ class Application extends SilexApplication
 
     private function configureListeners()
     {
-        // todo
+        $this->error(function() {
+            die('hallo!');
+        });
     }
 } 

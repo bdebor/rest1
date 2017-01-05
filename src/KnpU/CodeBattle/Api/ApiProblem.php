@@ -59,6 +59,8 @@ class ApiProblem
         );
     }
 
-
-
+	public function getTitle()
+	{
+		return $this->title;
+	}
 }
