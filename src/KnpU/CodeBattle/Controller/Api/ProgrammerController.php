@@ -61,6 +61,9 @@ class ProgrammerController extends BaseController
 
         $response = new JsonResponse($data, 200);
 
+//		$json = $this->serialize($programmer);
+//		$response = new Response($json, 200);
+
         return $response;
     }
 
@@ -85,6 +88,11 @@ class ProgrammerController extends BaseController
             'powerLevel' => $programmer->powerLevel,
             'tagLine' => $programmer->tagLine,
         );
+    }
+
+    protected function serialize($data)
+    {
+        return $this->container['serializer']->serialize($data, 'json');
     }
 
     public function updateAction($nickname, Request $request)
