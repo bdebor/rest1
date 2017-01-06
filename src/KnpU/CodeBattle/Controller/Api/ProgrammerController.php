@@ -2,6 +2,7 @@
 
 namespace KnpU\CodeBattle\Controller\Api;
 
+use JMS\Serializer\SerializationContext;
 use KnpU\CodeBattle\Api\ApiProblem;
 use KnpU\CodeBattle\Api\ApiProblemException;
 use KnpU\CodeBattle\Controller\BaseController;
@@ -92,8 +93,11 @@ class ProgrammerController extends BaseController
 
     protected function serialize($data)
     {
-        return $this->container['serializer']->serialize($data, 'json');
-    }
+		$context = new SerializationContext();
+		$context->setSerializeNull(true);
+
+		return $this->container['serializer']->serialize($data, 'json', $context);
+	}
 
     public function updateAction($nickname, Request $request)
     {
