@@ -6,6 +6,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use KnpU\CodeBattle\Api\ApiProblem;
 use KnpU\CodeBattle\Api\ApiProblemException;
+use KnpU\CodeBattle\Api\ApiProblemResponseFactory;
 use KnpU\CodeBattle\Battle\PowerManager;
 use KnpU\CodeBattle\Repository\BattleRepository;
 use KnpU\CodeBattle\Repository\ProjectRepository;
@@ -219,6 +220,10 @@ class Application extends SilexApplication
                 ->setPropertyNamingStrategy(new IdenticalPropertyNamingStrategy())
                 ->build();
         });
+
+        $this['api.response_factory'] = $this->share(function() {
+            return new ApiProblemResponseFactory();
+        });
     }
 
     private function configureSecurity()
@@ -322,17 +327,10 @@ class Application extends SilexApplication
                 $apiProblem->set('detail', $e->getMessage());
             }
 
-            $data = $apiProblem->toArray();
-            if ($data['type'] != 'about:blank') {
-                $data['type'] = 'http://localhost:8000/api/docs/errors#'.$data['type'];
-            }
-            $response = new JsonResponse(
-                $data,
-                $apiProblem->getStatusCode()
-            );
-            $response->headers->set('Content-Type', 'application/problem+json');
+            /** @var \KnpU\CodeBattle\Api\ApiProblemResponseFactory $factory */
+            $factory = $app['api.response_factory'];
 
-            return $response;
+            return $factory->createResponse($apiProblem);
         });
     }
 } 
