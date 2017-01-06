@@ -39,8 +39,7 @@ class ProgrammerController extends BaseController
 
         $this->save($programmer);
 
-		$json = $this->serialize($programmer);
-		$response = new Response($json, 201);
+		$response = $this->createApiResponse($programmer, 201);
         $programmerUrl = $this->generateUrl(
             'api_programmers_show',
             ['nickname' => $programmer->nickname]
@@ -58,8 +57,7 @@ class ProgrammerController extends BaseController
             $this->throw404('Crap! This programmer has deserted! We\'ll send a search party');
         }
 
-		$json = $this->serialize($programmer);
-		$response = new Response($json, 200);
+		$response = $this->createApiResponse($programmer, 200);
 
         return $response;
     }
@@ -69,19 +67,10 @@ class ProgrammerController extends BaseController
         $programmers = $this->getProgrammerRepository()->findall();
         $data = array('programmers' => $programmers);
 
-		$json = $this->serialize($data);
-		$response = new Response($json, 200);
+		$response = $this->createApiResponse($data, 200);
 
         return $response;
     }
-
-    protected function serialize($data)
-    {
-		$context = new SerializationContext();
-		$context->setSerializeNull(true);
-
-		return $this->container['serializer']->serialize($data, 'json', $context);
-	}
 
     public function updateAction($nickname, Request $request)
     {
@@ -99,8 +88,7 @@ class ProgrammerController extends BaseController
 
 		$this->save($programmer);
 
-		$json = $this->serialize($programmer);
-		$response = new Response($json, 200);
+		$response = $this->createApiResponse($programmer, 200);
 
         return $response;
     }
