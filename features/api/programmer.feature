@@ -35,6 +35,7 @@ Feature: Programmer
     tagLine
     """
     And the "nickname" property should equal "UnitTester"
+    And the "userId" property should not exist
 
   Scenario: GET a collection of programmers
     Given the following programmers exist:
