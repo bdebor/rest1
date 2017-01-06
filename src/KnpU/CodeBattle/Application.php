@@ -279,7 +279,7 @@ class Application extends SilexApplication
 
             // the class that decides what should happen if no authentication credentials are passed
             $this['security.entry_point.'.$name.'.api_token'] = $app->share(function() use ($app) {
-                return new ApiEntryPoint($app['translator']);
+                return new ApiEntryPoint($app['translator'], $app['api.response_factory']);
             });
 
             return array(
