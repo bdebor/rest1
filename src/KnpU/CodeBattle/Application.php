@@ -240,6 +240,7 @@ class Application extends SilexApplication
                     'stateless' => true,
                     'anonymous' => true,
                     'api_token' => true,
+                    'http' => true,
                 ),
                 'main' => array(
                     'pattern' => '^/',
